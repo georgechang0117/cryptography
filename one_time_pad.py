@@ -2,25 +2,35 @@ import string
 import random
 import re
 
+def random_key(length):
+  key = ''
+  for i in range(0, length):
+   key += random.choice(string.ascii_lowercase)
+  print('       Key:'+key)
+  return key
+
+def encrypt(msg, key):
+  print('   Message:'+msg)
+  cipher_text = ''
+  for i in range(0, len(msg)):
+    cipher_num = (ord(msg[i])-97 ^ ord(key[i])-97) % 26
+    cipher_text += chr(cipher_num+97)
+  
+  return cipher_text
+
+def decrypt(cipher_text, key):
+  msg = ''
+  for i in range(0, len(cipher_text)):
+    decrypt_num = ((ord(cipher_text[i])-97) - (ord(key[i])-97))%26
+    msg += chr(decrypt_num+97)
+  return msg
+
 print('One Time Pad Mark 1')
 msg = input('Input message:')
 msg = msg.lower()
 pattern = re.compile('[a-z]+')
 msg = ''.join(re.findall(pattern, msg))
-msg_num = []
-key = ''
-key_num = []
-chpher_text = ''
-for c in msg:
-  msg_num.append(str(ord(c)-97))
-  key_letter = random.choice(string.ascii_lowercase)
-  key += key_letter
-  cipher_num = (ord(c)-97 ^ ord(key_letter)-97) % 26
-  chpher_text += chr(cipher_num+97)
-  key_num.append(str(ord(key_letter)-97))
-  
-print('   Message:'+msg)
-print('  MsgToNum:'+','.join(msg_num))
-print('       Key:'+key)
-print('  KeyToNum:'+','.join(key_num))
-print('CipherText:'+chpher_text)
+key = random_key(len(msg))
+chpher_text = encrypt(msg, key)
+decrypt(chpher_text, key)
+
